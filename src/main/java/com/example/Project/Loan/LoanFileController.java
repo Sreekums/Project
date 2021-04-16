@@ -73,7 +73,7 @@ public class LoanFileController {               //Loan File Controller handles t
 	}
 	
 	@RequestMapping(value="/" , method=RequestMethod.GET)
-	public String showLoans()                                           //showLoans() method is responsible to handle GET requests for the application 
+	public List<Object> showLoans()                                           //showLoans() method is responsible to handle GET requests for the application 
 	{
 		return ls.getLoans();                                                    //getLoans() method is responsible to get the data from the database using LoanService 
 	}

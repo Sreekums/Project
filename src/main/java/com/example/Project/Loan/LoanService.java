@@ -1,7 +1,10 @@
 package com.example.Project.Loan;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -35,9 +38,16 @@ public class LoanService {
 		return true;
 	}
 	
-	public String getLoans()      //getLoans() method uses the predefined findAll() method inherited from JPARepostiory to obtain all records
+	public List<Object> getLoans()      //getLoans() method uses the predefined findAll() method inherited from JPARepostiory to obtain all records
 	{
-		return ("Requests:\n" + List.of(loanRepo.findAll()) + "\nApproved:\n" + List.of(loanAcceptedRepo.findAll()) + "\nRejected\n" + List.of(loanRejectRepo.findAll()));
+		List<LoanClass> request = loanRepo.findAll();
+		List<LoanAcceptedClass> approve = loanAcceptedRepo.findAll();
+		List<LoanRejectedClass> reject = loanRejectRepo.findAll();
+		List<Object> finalList = new ArrayList<>();
+		finalList.addAll(request);
+		finalList.addAll(approve);
+		finalList.addAll(reject);
+		return finalList;
 	}
 	
 	public void saveLoan(LoanClass loan)   //saveLoan() method saves an LoanClass object using save() method inherited from the JPARepostiory
