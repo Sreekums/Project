@@ -64,7 +64,7 @@ public class LoanFileController {               //Loan File Controller handles t
 		}// from the client and parses the file 
 		catch(Exception e)
 		{
-			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.toString());
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage().toString());
 		}
 		 finally { is.close(); br.close(); }
 			
