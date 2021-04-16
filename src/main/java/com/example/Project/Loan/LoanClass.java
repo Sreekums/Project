@@ -5,7 +5,7 @@ import java.util.Date;
 import javax.persistence.*;    
 
  @Entity
- @Table(name="loans")                           //LoanClass is the data class modelling the data storage in the database
+ @Table(name="loans1")                           //LoanClass is the data class modelling the data storage in the database
  public class LoanClass {
 	@Id
 	private long id;
