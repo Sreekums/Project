@@ -5,8 +5,8 @@ import java.util.Date;
 import javax.persistence.*;    
 
  @Entity
- @Table(name="loansrequest")                           //LoanClass is the data class modelling the data storage in the database
- public class LoanClass {
+ @Table(name="loannreject")                           //LoanClass is the data class modelling the data storage in the database
+ public class LoanRejectedClass {
 	@Id
 	private long id;
 	private String name;
@@ -27,9 +27,9 @@ import javax.persistence.*;
 	
 	
 
-    public LoanClass() {}   
+    public LoanRejectedClass() {}   
 	
-	public LoanClass(long id, String name, long loancapital, int period, boolean employ, long credscore, long empolyexp,
+	public LoanRejectedClass(long id, String name, long loancapital, int period, boolean employ, long credscore, long empolyexp,
 			boolean emistat, String dob, int def_days, boolean public_sector, int profit_proj, boolean crim_bg,
 			boolean ec_off, String collateral_type, String ltype) 
 	{
@@ -50,6 +50,27 @@ import javax.persistence.*;
 		this.collateral_type = collateral_type;
 		this.ltype = ltype;
 	}
+	
+	public LoanRejectedClass(LoanClass object) 
+	{
+		this.id = object.getId();
+		this.name = object.getName();
+		this.loancapital = object.getLoancapital();
+		this.period = object.getPeriod();
+		this.employ = object.isEmploy();                                             //Constructor which will instantiate the created objects
+		this.credscore = object.getCredscore();
+		this.empolyexp = object.getEmpolyexp();
+		this.emistat = object.isEmistat();
+		this.dob = object.getDob();
+		this.def_days = object.getDef_days();
+		this.public_sector = object.isPublic_sector();
+		this.profit_proj = object.getProfit_proj();
+		this.crim_bg = object.isCrim_bg();
+		this.ec_off = object.isEc_off();
+		this.collateral_type = object.getCollateral_type();
+		this.ltype = object.getLtype();
+	}
+
 
 	public long getId() {
 		return id;

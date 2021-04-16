@@ -55,11 +55,8 @@ public class LoanFileController {               //Loan File Controller handles t
 							Boolean.parseBoolean(parse[13]),
 							parse[14],
 							parse[15]);
-					//System.out.println(r.getId()+" "+r.getName()+" "+r.getCapital());
-					if(ls.loanSelection())                                               //loanSelection() method is responsible for implement business logic from the LoanService object to reject loan randomly 
-					{
-						ls.saveLoan(r);                                                  //saveLoan() method is responsible for saving the accepted loans to the database using LoanService
-					}
+							//System.out.println(r.getId()+" "+r.getName()+" "+r.getCapital());
+					ls.saveLoan(r);                                                  //saveLoan() method is responsible for saving the accepted loans to the database using LoanService
 			}
 		}// from the client and parses the file 
 		catch(Exception e)
@@ -71,11 +68,12 @@ public class LoanFileController {               //Loan File Controller handles t
 			/*
 			 * is.close(); br.close();
 			 */
+		ls.processLoans();
 		return ResponseEntity.status(HttpStatus.OK).body("Successful File Upload");                                               //Finally returns a message that file was uploaded on complete success
 	}
 	
 	@RequestMapping(value="/" , method=RequestMethod.GET)
-	public List<LoanClass> showLoans()                                           //showLoans() method is responsible to handle GET requests for the application 
+	public String showLoans()                                           //showLoans() method is responsible to handle GET requests for the application 
 	{
 		return ls.getLoans();                                                    //getLoans() method is responsible to get the data from the database using LoanService 
 	}

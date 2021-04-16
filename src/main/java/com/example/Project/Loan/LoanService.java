@@ -9,11 +9,15 @@ import org.springframework.stereotype.Service;
 @Service
 public class LoanService {
 	private final LoanRepo loanRepo;
+	private final LoanAccpetedRepo loanAcceptedRepo;
+	private final LoanRejectRepo loanRejectRepo;
 	
 	@Autowired
-	public LoanService(LoanRepo repo)    //Constructor initializes the LoanRepo object for database access
+	public LoanService(LoanRepo repo,LoanAccpetedRepo loanAcceptedRepo,LoanRejectRepo loanRejectRpo)    //Constructor initializes the LoanRepo object for database access
 	{
 		this.loanRepo = repo;
+		this.loanAcceptedRepo = loanAcceptedRepo;
+		this.loanRejectRepo = loanRejectRpo;
 	}
 	
 	public boolean loanSelection()         //loanSelection() method rejects loans by generating random number and checking if it's a prime
@@ -31,14 +35,32 @@ public class LoanService {
 		return true;
 	}
 	
-	public List<LoanClass> getLoans()      //getLoans() method uses the predefined findAll() method inherited from JPARepostiory to obtain all records
+	public String getLoans()      //getLoans() method uses the predefined findAll() method inherited from JPARepostiory to obtain all records
 	{
-		return loanRepo.findAll();
+		return ("Requests:\n" + List.of(loanRepo.findAll()) + "\nApproved:\n" + List.of(loanAcceptedRepo.findAll()) + "\nRejected\n" + List.of(loanRejectRepo.findAll()));
 	}
 	
 	public void saveLoan(LoanClass loan)   //saveLoan() method saves an LoanClass object using save() method inherited from the JPARepostiory
 	{
 		loanRepo.save(loan);
+	}
+	
+	public void processLoans()               //processLoans() will process the loans and put the rejected loans in a separate table from the accepted ones
+	{
+		List<LoanClass> records = loanRepo.findAll();
+	    while(!records.isEmpty())
+	    {
+	    	if(loanSelection())
+	    	{
+	    		loanAcceptedRepo.save(new LoanAcceptedClass(records.get(0)));
+	    		records.remove(0);
+	    	}
+	    	else
+	    	{
+	    		loanRejectRepo.save(new LoanRejectedClass(records.get(0)));
+	    		records.remove(0);
+	    	}
+	    }
 	}
 
 }
