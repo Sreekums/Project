@@ -6,9 +6,13 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.text.SimpleDateFormat;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -24,39 +28,50 @@ public class LoanFileController {               //Loan File Controller handles t
 	}
 
 	@RequestMapping(value="/loadFile", method=RequestMethod.POST, consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-	public String fileUpload(@RequestParam("file") MultipartFile file) throws IOException,ParseException
+	public ResponseEntity<String> fileUpload(@RequestParam("file") MultipartFile file) throws IOException,ParseException
 	{
-		File rec=new File("H:\\"+file.getOriginalFilename());
-		BufferedReader br=new BufferedReader(new FileReader(rec));            //fileUpload() method handles the POST request
-		String line="";                                                       // from the client and parses the file 
-		while((line = br.readLine())!=null)                                   //to extract the data
+		InputStream is= file.getInputStream();
+		BufferedReader br=new BufferedReader(new InputStreamReader(is));            //fileUpload() method handles the POST request
+		String line="";  
+		try
 		{
-			String[] parse = line.split(",");
-			LoanClass r= new LoanClass(Long.parseLong(parse[0]),
-					parse[1],
-					Long.parseLong(parse[2]),
-					Integer.parseInt(parse[3]),
-					Boolean.parseBoolean(parse[4]),
-					Long.parseLong(parse[5]),
-					Long.parseLong(parse[6]),
-					Boolean.parseBoolean(parse[7]),
-					parse[8],
-					Integer.parseInt(parse[9]),
-					Boolean.parseBoolean(parse[10]),
-					Integer.parseInt(parse[11]),
-					Boolean.parseBoolean(parse[12]),
-					Boolean.parseBoolean(parse[13]),
-					parse[14],
-					parse[15]);
-			//System.out.println(r.getId()+" "+r.getName()+" "+r.getCapital());
-			if(ls.loanSelection())                                               //loanSelection() method is responsible for implement business logic from the LoanService object to reject loan randomly 
+			while((line = br.readLine())!=null)                                   //to extract the data
 			{
-				ls.saveLoan(r);                                                  //saveLoan() method is responsible for saving the accepted loans to the database using LoanService
+				
+					String[] parse = line.split(",");
+					LoanClass r= new LoanClass(Long.parseLong(parse[0]),
+							parse[1],
+							Long.parseLong(parse[2]),
+							Integer.parseInt(parse[3]),
+							Boolean.parseBoolean(parse[4]),
+							Long.parseLong(parse[5]),
+							Long.parseLong(parse[6]),
+							Boolean.parseBoolean(parse[7]),
+							parse[8],
+							Integer.parseInt(parse[9]),
+							Boolean.parseBoolean(parse[10]),
+							Integer.parseInt(parse[11]),
+							Boolean.parseBoolean(parse[12]),
+							Boolean.parseBoolean(parse[13]),
+							parse[14],
+							parse[15]);
+					//System.out.println(r.getId()+" "+r.getName()+" "+r.getCapital());
+					if(ls.loanSelection())                                               //loanSelection() method is responsible for implement business logic from the LoanService object to reject loan randomly 
+					{
+						ls.saveLoan(r);                                                  //saveLoan() method is responsible for saving the accepted loans to the database using LoanService
+					}
 			}
+		}// from the client and parses the file 
+		catch(Exception e)
+		{
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.toString());
 		}
-		br.close();
-		
-		return "File is uploaded";                                               //Finally returns a message that file was uploaded on complete success
+		 finally { is.close(); br.close(); }
+			
+			/*
+			 * is.close(); br.close();
+			 */
+		return ResponseEntity.status(HttpStatus.OK).body("Successful File Upload");                                               //Finally returns a message that file was uploaded on complete success
 	}
 	
 	@RequestMapping(value="/" , method=RequestMethod.GET)
