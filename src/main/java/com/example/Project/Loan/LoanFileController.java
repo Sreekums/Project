@@ -68,13 +68,36 @@ public class LoanFileController {               //Loan File Controller handles t
 			/*
 			 * is.close(); br.close();
 			 */
-		ls.processLoans();
 		return ResponseEntity.status(HttpStatus.OK).body("Successful File Upload");                                               //Finally returns a message that file was uploaded on complete success
+	}
+	
+	@RequestMapping(value="/process", method=RequestMethod.POST)
+	public void processing()
+	{
+		ls.processLoans();
 	}
 	
 	@RequestMapping(value="/" , method=RequestMethod.GET)
 	public List<Object> showLoans()                                           //showLoans() method is responsible to handle GET requests for the application 
 	{
 		return ls.getLoans();                                                    //getLoans() method is responsible to get the data from the database using LoanService 
+	}
+	
+	@RequestMapping(value="/request" , method=RequestMethod.GET)
+	public List<LoanClass> showRequestLoans()                                           //showLoans() method is responsible to handle GET requests for the application 
+	{
+		return ls.getRequestLoans();                                                    //getLoans() method is responsible to get the data from the database using LoanService 
+	}
+	
+	@RequestMapping(value="/accept" , method=RequestMethod.GET)
+	public List<LoanAcceptedClass> showAcceptLoans()                                           //showLoans() method is responsible to handle GET requests for the application 
+	{
+		return ls.getAcceptLoans();                                                    //getLoans() method is responsible to get the data from the database using LoanService 
+	}
+	
+	@RequestMapping(value="/reject" , method=RequestMethod.GET)
+	public List<LoanRejectedClass> showRejectLoans()                                           //showLoans() method is responsible to handle GET requests for the application 
+	{
+		return ls.getRejectLoans();                                                    //getLoans() method is responsible to get the data from the database using LoanService 
 	}
 }

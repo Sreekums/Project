@@ -9,20 +9,35 @@ import javax.persistence.*;
  public class LoanRejectedClass {
 	@Id
 	private long id;
+	@Column(name = "name")
 	private String name;
+	@Column(name = "loancapital")
 	private long loancapital;
+	@Column(name = "period")
 	private int period;
+	@Column(name = "employ")
 	private boolean employ;
+	@Column(name = "credscore")
 	private long credscore;
+	@Column(name = "empolyexp")
 	private long empolyexp;
+	@Column(name = "emistat")
 	private boolean emistat;
+	@Column(name = "dob")
 	private String dob;
+	@Column(name = "def_days")
 	private int def_days;
+	@Column(name = "public_sector")
 	private boolean public_sector;
+	@Column(name = "profit_proj")
 	private int profit_proj;
+	@Column(name = "crim_bg")
 	private boolean crim_bg;
+	@Column(name = "ec_off")
 	private boolean ec_off;
+	@Column(name = "collateral_type")
 	private String collateral_type;
+	@Column(name = "ltype")
 	private String ltype;
 	
 	

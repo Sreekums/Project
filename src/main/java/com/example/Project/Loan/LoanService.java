@@ -50,24 +50,55 @@ public class LoanService {
 		return finalList;
 	}
 	
+	public List<LoanClass> getRequestLoans()
+	{
+		return loanRepo.findAll();
+	}
+	
+	public List<LoanAcceptedClass> getAcceptLoans()
+	{
+		return loanAcceptedRepo.findAll();
+	}
+	
+	public List<LoanRejectedClass> getRejectLoans()
+	{
+		return loanRejectRepo.findAll();
+	}
+	
 	public void saveLoan(LoanClass loan)   //saveLoan() method saves an LoanClass object using save() method inherited from the JPARepostiory
 	{
-		loanRepo.save(loan);
+		if(!loanRepo.existsById(loan.getId()))
+		{
+			loanRepo.save(loan);
+		}
 	}
 	
 	public void processLoans()               //processLoans() will process the loans and put the rejected loans in a separate table from the accepted ones
 	{
-		List<LoanClass> records = loanRepo.findAll();
+		//List<LoanClass> records = loanRepo.findAll();
+		List<LoanClass> records = loanRepo.findByProcess(false);
 	    while(!records.isEmpty())
 	    {
 	    	if(loanSelection())
 	    	{
+	    		if(records.get(0).getProcess()==true)
+	    		{
+	    			break;
+	    		}
 	    		loanAcceptedRepo.save(new LoanAcceptedClass(records.get(0)));
+	    		records.get(0).setProcess(true);
+	    		loanRepo.save(records.get(0));
 	    		records.remove(0);
 	    	}
 	    	else
 	    	{
+	    		if(records.get(0).getProcess()==true)
+	    		{
+	    			break;
+	    		}
 	    		loanRejectRepo.save(new LoanRejectedClass(records.get(0)));
+	    		records.get(0).setProcess(true);
+	    		loanRepo.save(records.get(0));
 	    		records.remove(0);
 	    	}
 	    }
